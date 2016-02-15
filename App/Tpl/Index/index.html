@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI 排序（Sortable） - 连接列表</title>
+      <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+
+<!--    <link rel="stylesheet" href="__ROOT__/Public/css/jquery-ui.min.css"> -->
+<!--  <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
+    <script src="__ROOT__/Public/Js/jquery.min.js"></script>
+    <script src="__ROOT__/Public/Js/jquery-ui.min.js"></script> 
+  <link rel="stylesheet" href="http://www.w3cschool.cc/try/demo_source/jqueryui/style.css">
+  <style>
+      body {font-family:arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', \5b8b\4f53, Tahoma, Arial, Helvetica, STHeiti;}
+      
+      .connectedSortable { list-style-type: none; margin:auto; width:800px !important; border:1px ridge; border-radius:4px; padding:4px 0 0 0; width:100%; float: left; }
+      #sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; float:left; padding: 5px; font-size: 1.2em; width: 120px; cursor:move; }
+      /*   */
+      .ui-state-default { height:14px; }
+      .ui-state-default .divlink a { margin-left:15px;}
+      .ui-state-default .ui-icon-close {position:relative; top:-15px;}
+      .ui-state-default .ui-icon-pencil { position:relative; top:-29px; left:100px;}
+      .ui-state-highlight { height:14px; }
+      .ui-state-highlight .divlink a { margin-left:15px;}
+      .ui-state-highlight .ui-icon-close {position:relative; top:-15px;}
+      .ui-state-highlight .ui-icon-pencil { position:relative; top:-29px; left:100px;}
+      .add { cursor:pointer !important; }
+      /*form-group*/
+      .form-group { clear:both; margin-bottom:10px; display:none;}
+      .label-control {}
+      input[type=submit] {width:92px;display:inline-block;padding:3px;color:#FFF;text-decoration:none;outline:none;border:0;background:#389CFF;text-align:center;position:relative;*margin-top:1px;_margin-top:0;}
+	  
+	  .handle { width:100%; text-align:center;}
+	  #loader{height:24px; text-align:center; color:red;position: fixed;top:50%;}
+      .warning {font-size:18px;text-align:center;}
+  </style>
+  <script>
+  $(function() {
+    $( ".connectedSortable" ).sortable({
+      connectWith: ".connectedSortable",
+	  items: "li:not(.add,.form-group)",
+		update: function(){
+			$show = $("#loader");
+			//$url = "__APP__/Admin/Controller/UpdateController.class.php";
+			
+			//$url = "{:U('Admin/Update/index')}";
+			//$url = "__ROOT__/Extend/update.php";
+			  new_order = $(this).sortable("serialize");console.log('new_order:',new_order);
+			  $url = "__ROOT__/index.php/Update/index";
+/* 			  alert(isArray(new_order));//判断是否为数组
+			      var isArray = function(obj){
+	return obj instantof Array;
+  }; */
+			 $.ajax({
+                type: "post",
+                url: $url,
+                data: { id: new_order },   //id:新的排列对应的ID
+				//dataType:"",
+                beforeSend: function() {
+                    $show.html("<img src='__ROOT__/Public/image/load.gif' /> 正在更新");console.log($url);
+                },
+				error: function(err) {
+					$show.html(err);
+				},
+                success: function(msg) {
+                     //alert(msg);
+					 $show.html(msg);
+                }
+             });
+		}
+    }).disableSelection();
+  });
+  </script>
+
+  <script>
+/*  $(function() {
+	$(".connectedSortable").sortable({
+		items: "li:not(.add)"
+	});
+  });*/
+  </script>
+</head>
+<body>
+ 
+<ul id="sortable1" class="connectedSortable">
+	<volist name="list" id="v">
+  <li class="ui-state-default" id="a_{$v.id}">
+	<div class="divlink">
+		<a href={$v.link}><em class="link-word">{$v.link_word}</em></a>
+	</div>
+    <a href="{:U('Index/delete?aid='.$v['id'])}" class="ui-icon ui-icon-close" title="删除"></a>
+    <a href="#" class="ui-icon ui-icon-pencil"></a>
+  </li> 
+	</volist> 
+    <li class="ui-state-default add"><a href="javascript:" class="ui-icon ui-icon-circle-plus aadd">添加</a></li>
+</ul>
+     <div class="form-group">
+        <form method="post" action="{:U('Admin/Index/add')}">
+            <label class="label-control" for="web">网站名称</label>
+            <input type="text" name="web" class="input-control" placeholder="名称" />
+            <label class="label-control" for="website">网址</label>
+            <input type="text" name="website" class="input-control" placeholder="网址" />
+            <input type="submit" />
+        </form>
+    </div>
+        <div id="loader"></div>
+    <div class="warning">说明：拖拽排序功能（利用Ajax向后台提交数据,并发情况下情况木有预测，这里部分用户了，需要download到本地做测试），拖拽后刷新浏览器可以看到效果</div>
+<script>
+	$(function() {
+		$("input[type=submit]").click(function() {
+			$(".input-control").html($(this).val());
+		});
+	});
+</script>
+ <script>
+     $(document).ready(function() {
+         $(".add").click(function() {
+             $(this).parent().next().toggle(600);
+         });
+     });
+ </script>
+ <script>
+ $(function() {
+	$(".add").click(function() {
+         $(this).children().toggleClass("ui-icon-circle-minus ui-icon-circle-plus");
+	});
+ });
+ </script>
+</body>
+</html>			
