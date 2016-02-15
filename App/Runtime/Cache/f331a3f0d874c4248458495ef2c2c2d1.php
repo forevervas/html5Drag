@@ -47,7 +47,7 @@
 			//$url = "<?php echo U('Admin/Update/index');?>";
 			//$url = "__ROOT__/Extend/update.php";
 			  new_order = $(this).sortable("serialize");console.log('new_order:',new_order);
-			  $url = "__ROOT__/index.php/Update/index";
+			  $url = "<?php echo U('Update/index');?>";
 /* 			  alert(isArray(new_order));//判断是否为数组
 			      var isArray = function(obj){
 	return obj instantof Array;
@@ -60,12 +60,12 @@
                 beforeSend: function() {
                     $show.html("<img src='__ROOT__/Public/image/load.gif' /> 正在更新");console.log($url);
                 },
-				error: function(err) {
-					$show.html(err);
-				},
+        				error: function(err) {
+        					$show.html(err);
+        				}, 
                 success: function(msg) {
-                     //alert(msg);
-					 $show.html(msg);
+                  console.log('msg',msg);
+					        $show.html(msg);
                 }
              });
 		}
@@ -103,7 +103,7 @@
         </form>
     </div>
         <div id="loader"></div>
-    <div class="warning">说明：拖拽排序功能（利用Ajax向后台提交数据,并发情况下情况木有预测，这里部分用户了，需要download到本地做测试），拖拽后刷新浏览器可以看到效果</div>
+    <div class="warning" style="position:fixed;bottom:0;width:85%;">说明：拖拽排序功能（利用Ajax向后台提交数据,并发情况下情况木有预测，这里部分用户了，需要download到本地做测试），拖拽后刷新浏览器可以看到效果<a href="https://github.com/forevervas/html5Drag" target="_blank">git地址</a></div>
 <script>
 	$(function() {
 		$("input[type=submit]").click(function() {
