@@ -60,12 +60,12 @@
                 beforeSend: function() {
                     $show.html("<img src='__ROOT__/Public/image/load.gif' /> 正在更新");console.log($url);
                 },
-				error: function(err) {
-					$show.html(err);
-				},
+        				error: function(err) {
+        					$show.html(err);
+        				},
                 success: function(msg) {
-                     console.log('msg',msg);
-					 $show.html(msg);
+                  console.log('msg',msg);
+					        $show.html(msg);
                 }
              });
 		}
